@@ -25,18 +25,21 @@ Answer each question in 3 to 5 sentences. Be specific and honest about what actu
 
 ## 2. How did you use AI as a teammate?
 
-- Which AI tools did you use on this project (for example: ChatGPT, Gemini, Copilot)?
-- Give one example of an AI suggestion that was correct (including what the AI suggested and how you verified the result).
-- Give one example of an AI suggestion that was incorrect or misleading (including what the AI suggested and how you verified the result).
+I used Claude Code (Agent mode) as my primary AI tool for this project. I manually played through the game in each difficulty, documented every bug I found in this reflection, and then brought Claude in to help locate each defect in the codebase and collaborate on fixes.
+
+**Correct AI suggestion:** Claude correctly identified that the "New Game" button wasn't resetting `status`, `score`, or `history` in session state — only `attempts` and `secret` were being reset. That's why clicking "New Game" after a win or loss did nothing; the status was still "won" or "lost" so `st.stop()` blocked the UI. I verified this by reading the original code at lines 134-138 of app.py, where only two fields were reset. After Claude added the missing resets, I clicked "New Game" after both winning and losing and confirmed it worked.
+
+**Incorrect/misleading AI suggestion:** When I asked Claude to fix the Hard difficulty range, it initially suggested changing Hard to `(1, 200)` on its own. That wasn't what I wanted — I needed Normal to be 50 and Hard to be 100, essentially swapping the two ranges so the progression made sense (Easy=20, Normal=50, Hard=100). I rejected the edit and clarified what the correct values should be. Claude then applied the fix I described. This taught me that AI suggestions need to be checked against your own understanding of the design, not just accepted.
 
 ---
 
 ## 3. Debugging and testing your fixes
 
-- How did you decide whether a bug was really fixed?
-- Describe at least one test you ran (manual or using pytest)  
-  and what it showed you about your code.
-- Did AI help you design or understand any tests? How?
+I decided a bug was fixed by running both manual tests in the Streamlit UI and automated tests with pytest. For manual testing, I played through each difficulty, submitted empty guesses, won games, lost games, and clicked "New Game" after each — basically retracing every scenario from my bug list in section 1.
+
+For automated testing, Claude generated 17 pytest cases in `tests/test_game_logic.py` that targeted every bug we identified. When we first ran them against the broken code, 6 tests failed — each one proving a specific defect: the swapped hints, the wrong Hard range, the off-by-one score formula, and the inconsistent "Too High" penalty. After applying fixes to `logic_utils.py`, we re-ran pytest and watched the failures drop to 0. That gave me confidence the logic was solid.
+
+Claude helped design the tests by writing assertions that described the *correct* behavior rather than what the buggy code was doing. For example, `test_guess_too_high_gives_lower_hint` asserts that `"LOWER"` appears in the message when the guess is too high — which failed against the original swapped hints. This approach made the tests serve double duty: they proved the bugs existed before the fix, and confirmed they were gone after.
 
 ---
 
