@@ -25,13 +25,39 @@ It wrote the code, ran away, and now the game is unplayable.
 
 ## 📝 Document Your Experience
 
-- [ ] Describe the game's purpose.
-- [ ] Detail which bugs you found.
-- [ ] Explain what fixes you applied.
+- [x] Describe the game's purpose.
+
+The Game Glitch Investigator is a Streamlit-based number guessing game where the player picks a difficulty (Easy, Normal, or Hard), and tries to guess a secret number within a limited number of attempts. The app gives hints after each guess to guide the player higher or lower.
+
+- [x] Detail which bugs you found.
+
+I found 9 bugs by manually playing through every difficulty and documenting each one in `reflection.md`:
+1. Submitting an empty guess still decremented the attempts counter.
+2. The hint messages were backwards — "Go HIGHER!" when too high, "Go LOWER!" when too low.
+3. Clicking "New Game" after winning did nothing.
+4. Clicking "New Game" after losing did nothing.
+5. The UI hardcoded "Guess a number between 1 and 100" regardless of difficulty, and the attempts counter was off by one.
+6. The game ended one attempt early across all difficulties.
+7. Hard difficulty (1-50) was easier than Normal (1-100) — the ranges were swapped.
+8. On even-numbered attempts, the secret was converted to a string, causing erratic comparisons.
+9. The score formula used `attempt_number + 1`, over-penalizing the player by 10 points on every win.
+
+- [x] Explain what fixes you applied.
+
+I refactored all game logic from `app.py` into `logic_utils.py` and fixed each bug:
+- Swapped the hint messages so they point in the correct direction.
+- Corrected difficulty ranges: Easy=1-20, Normal=1-50, Hard=1-100.
+- Fixed the score formula by removing the extra `+ 1`.
+- Made the "Too High" penalty a consistent -5 instead of an erratic even/odd split.
+- Initialized attempts to 0 instead of 1.
+- Made the UI range text dynamic using the actual `low` and `high` values.
+- Reset `status`, `score`, and `history` in the "New Game" handler so it works after win/loss.
+- Moved attempt increment after validation so empty guesses don't burn a turn.
+- Removed the string conversion of the secret on even attempts.
 
 ## 📸 Demo
 
-- [ ] [Insert a screenshot of your fixed, winning game here]
+![Fixed winning game screenshot](image.png)
 
 ## 🚀 Stretch Features
 

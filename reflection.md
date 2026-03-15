@@ -46,8 +46,16 @@ Claude helped design the tests by writing assertions that described the *correct
 ## 4. What did you learn about Streamlit and state?
 
 - In your own words, explain why the secret number kept changing in the original app.
+
+In python integers and strings in incomparable. I'm aware of this because I use Java a lot at work, at we need to perform string comparisons with the .equals() method. I actually did not produce this error, there was a podmate that mentioned this. It wasn't until after class I realized it was only on even numbered attempts. 
+
 - How would you explain Streamlit "reruns" and session state to a friend who has never used Streamlit?
+
+I'm super familiar with state based coding from many computer engineering classes where we used system verilog to code. We would require FSM (Finite State Machines) to guide the function of the code. Streamlit states are essentially the same approach. All games have a specific flow, where many states are re-used, and the number 1 thing to avoid is a infinite loop state or a dead end. Drawing a state register helps create these states in code and it is easier to understand.
+
 - What change did you make that finally gave the game a stable secret number?
+
+Well I got rid of the unnecessary `if st.session_state.attempts % 2 == 0` which converted the secret to a string.
 
 ---
 
@@ -55,5 +63,13 @@ Claude helped design the tests by writing assertions that described the *correct
 
 - What is one habit or strategy from this project that you want to reuse in future labs or projects?
   - This could be a testing habit, a prompting strategy, or a way you used Git.
+
+I liked the output of how AI created a commit message. It works well because the chat history should know all changes and will most likely not leave out a small change.
+
 - What is one thing you would do differently next time you work with AI on a coding task?
+
+I didn't guide the AI well at first with needing to refactor the code in logic_utils.py but to also use the new refactored code from logic_utils.py. Once I had the working code in logic_utils.py, all pytests kept failing because we were not actually calling the refactored methods.
+
 - In one or two sentences, describe how this project changed the way you think about AI generated code.
+
+AI is more of a companion that needs to be trained on what to think about and guided on how to approach a problem. AI cannot manually play around in the UI, or at least in this example it couldn't. Creating a list and giving it the tools it needed to know where to go helped discover the various defects.
